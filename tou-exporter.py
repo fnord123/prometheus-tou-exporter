@@ -3,7 +3,6 @@
 # David Putzolu, based on code by Scott Baker(http://www.smbaker.com/)
 
 from prometheus_client import start_http_server, Gauge
-import requests
 import sys
 from time import sleep
 from envargparse import EnvArgParser, EnvArgDefaultsHelpFormatter
@@ -37,7 +36,7 @@ class touPrometheusExporter:
     parser.add_argument\
         ( '--verbose'
         , required=False
-        , env_var="EXPORTER_VERBORSE"
+        , env_var="EXPORTER_VERBOSE"
         , action='store_true'
         , default=False
         , help="Enable verbose debug outputs"
