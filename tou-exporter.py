@@ -45,17 +45,13 @@ class touPrometheusExporter:
     print(self._args)
 
   def calculate_tou_value_summer(self, now):
-    if now.hour < 6 or now.hour >= 22:
-      return 3
-    elif now.hour >= 15 and now.hour <= 20:
+    if now.hour >= 15 and now.hour <= 20:
       return 1
     else:
       return 2
 
   def calculate_tou_value_winter(self, now):
-    if now.hour < 6 or now.hour >= 22:
-      return 3
-    elif now.hour >= 10 and now.hour < 17:
+    if now.hour >= 10 and now.hour < 17:
       return 2
     elif now.hour >= 20 and now.hour < 22:
       return 2
@@ -63,7 +59,13 @@ class touPrometheusExporter:
       return 1
 
   def calculate_tou_value(self):
+    if datetime.today().weekday() == 6:
+      # Sundays are off-peak all day long
+      return 3
     now = datetime.now()
+    if now.hour < 6 or now.hour >= 22:
+      # 10pm to 6am is off-peak every season
+      return 3
     if now.month > 10 or now.month < 5:
       return self.calculate_tou_value_winter(now)
     else:
