@@ -67,9 +67,15 @@ class touPrometheusExporter:
       # 10pm to 6am is off-peak every season
       return 3
     if now.month > 10 or now.month < 5:
-      return self.calculate_tou_value_winter(now)
+      tou = self.calculate_tou_value_winter(now)
     else:
-      return self.calculate_tou_value_summer(now)
+      tou = self.calculate_tou_value_summer(now)
+    if datetime.today().weekday() == 5:
+      # Saturdays do mid-peak instead of peak, so override
+      # the returned value if it is peak.
+      return max(2, tou)
+    else:
+      return tou
 
   def update_field(self, prometheus_field, label, field_value):
     prometheus_field.labels(label).set(field_value)
